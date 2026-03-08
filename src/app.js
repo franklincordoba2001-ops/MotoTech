@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 require('./config/db');
+
 // registro de rutas
 const clienteRoutes = require('./routes/clienteRoutes');
 const motoRoutes = require('./routes/motoRoutes');
