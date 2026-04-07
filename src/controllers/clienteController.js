@@ -1,68 +1,71 @@
 const clienteModel = require('../models/clienteModel');
 
 // Obtener todos los clientes
-const getClientes = (req, res) => {
-    clienteModel.getAllClientes((err, results) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.json(results);
-    });
+const getClientes = async (req, res) => {
+    try {
+        const clientes = await clienteModel.getAllClientes();
+        res.json(clientes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
 };
 
 // Obtener cliente por ID
-const getCliente = (req, res) => {
-    const { id } = req.params;
+const getCliente = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const cliente = await clienteModel.getClienteById(id);
 
-    clienteModel.getClienteById(id, (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        if (results.length === 0) {
+        if (!cliente) {
             return res.status(404).json({ message: 'Cliente no encontrado' });
         }
-        res.json(results[0]);
-    });
+        res.json(cliente);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 // Crear cliente
-const createCliente = (req, res) => {
-    const cliente = req.body;
-
-    clienteModel.createCliente(cliente, (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
+const createCliente = async (req, res) => {
+    try {
+        const datosCliente = req.body;
+        const result = await clienteModel.createCliente(datosCliente);
+        
         res.status(201).json({
             message: 'Cliente creado correctamente',
             id: result.insertId
         });
-    });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 // Actualizar cliente
-const updateCliente = (req, res) => {
-    const { id } = req.params;
-    const cliente = req.body;
-
-    clienteModel.updateCliente(id, cliente, (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
+const updateCliente = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const datosCliente = req.body;
+        
+        await clienteModel.updateCliente(id, datosCliente);
+        
         res.json({ message: 'Cliente actualizado correctamente' });
-    });
+    } catch (error) {
+        // El error de "No se encontró el cliente" vendrá del modelo
+        res.status(500).json({ error: error.message });
+    }
 };
 
 // Eliminar cliente
-const deleteCliente = (req, res) => {
-    const { id } = req.params;
-
-    clienteModel.deleteCliente(id, (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
+const deleteCliente = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await clienteModel.deleteCliente(id);
+        
         res.json({ message: 'Cliente eliminado correctamente' });
-    });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 module.exports = {

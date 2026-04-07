@@ -10,7 +10,7 @@ const ordenRoutes = require('./routes/ordenRoutes');
 const facturaRoutes = require('./routes/facturaRoutes');
 const authRoutes = require('./routes/authRoutes');
 const reporteRoutes = require('./routes/reporteRoutes');
-
+const usuarioRoutes = require("./routes/usuarioRoutes");
 const app = express();
 
 app.use(cors());
@@ -22,7 +22,7 @@ app.use('/api/ordenes', ordenRoutes);
 app.use('/api/facturas', facturaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/reportes', reporteRoutes);
-
+app.use("/api/usuarios", usuarioRoutes);
 
 app.get('/', (req, res) => {
     res.send('API Taller Mecánico funcionando correctamente');

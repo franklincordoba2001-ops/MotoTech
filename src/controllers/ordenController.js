@@ -45,23 +45,27 @@ const getOrden = async (req, res) => {
 // POST crear
 const createOrden = async (req, res) => {
   try {
-    const { moto_id, descripcion, fecha_ingreso, fecha_entrega, estado, costo } = req.body;
+    const {
+      moto_id,
+      descripcion,
+      fecha_ingreso,
+      fecha_entrega,
+      estado,
+      costo,
+    } = req.body;
 
     const result = await ordenModel.createOrden(
       moto_id,
       descripcion,
       fecha_ingreso,
       fecha_entrega,
-      estado || 'pendiente',
+      estado,
       costo
     );
 
-    res.status(201).json({
-      message: 'Orden creada correctamente',
-      id: result.insertId
-    });
-
+    res.json(result);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -93,12 +97,20 @@ const updateOrden = async (req, res) => {
 const deleteOrden = async (req, res) => {
   try {
     const { id } = req.params;
+    const result = await ordenModel.deleteOrden(id);
 
-    await ordenModel.deleteOrden(id);
-
-    res.json({ message: 'Orden eliminada correctamente' });
-
+    if (result.affectedRows > 0) {
+      res.json({ message: "Orden eliminada correctamente" });
+    } else {
+      res.status(404).json({ message: "No se encontró la orden" });
+    }
   } catch (error) {
+    
+    if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+      return res.status(400).json({ 
+        error: "No se puede eliminar la orden porque tiene una factura asociada. Elimina primero la factura." 
+      });
+    }
     res.status(500).json({ error: error.message });
   }
 };

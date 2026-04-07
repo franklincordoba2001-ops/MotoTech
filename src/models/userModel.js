@@ -1,22 +1,36 @@
-const db = require('../config/db');
+const db = require("../config/db");
 
-const createUser = async (nombre, email, password) => {
+const createUsuario = async (nombre, email, password, role) => {
   const [result] = await db.query(
-    'INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)',
-    [nombre, email, password]
+    "INSERT INTO usuarios (nombre, email, password, role) VALUES (?, ?, ?, ?)",
+    [nombre, email, password, role]
   );
   return result;
 };
 
-const findUserByEmail = async (email) => {
-  const [rows] = await db.query(
-    'SELECT * FROM usuarios WHERE email = ?',
-    [email]
+const getUsuarios = async () => {
+  const [rows] = await db.query("SELECT * FROM usuarios");
+  return rows;
+};
+
+const deleteUsuario = async (id) => {
+  const [result] = await db.query(
+    "DELETE FROM usuarios WHERE id = ?",
+    [id]
   );
-  return rows[0];
+  return result;
+};
+
+// --- AGREGA ESTA FUNCIÓN ---
+const findUserByEmail = async (email) => {
+  const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [email]);
+  return rows[0]; // Retorna el primer usuario encontrado o undefined
 };
 
 module.exports = {
-  createUser,
-  findUserByEmail
+  createUsuario,
+  getUsuarios,
+  findUserByEmail,
+  deleteUsuario,
+  
 };

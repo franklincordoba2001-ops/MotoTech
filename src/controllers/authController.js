@@ -1,66 +1,38 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const userModel = require('../models/userModel');
+const jwt = require("jsonwebtoken");
+const db = require("../config/db");
 
 const SECRET_KEY = "secreto_super_seguro";
 
-const register = async (req, res) => {
-  try {
-    const { nombre, email, password } = req.body;
-
-    if (!nombre || !email || !password) {
-      return res.status(400).json({ message: "Campos obligatorios" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    await userModel.createUser(nombre, email, hashedPassword);
-
-    res.status(201).json({ message: "Usuario registrado correctamente" });
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 const login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
+    const [rows] = await db.query(
+      "SELECT * FROM usuarios WHERE email = ?",
+      [email]
+    );
 
-    const user = await userModel.findUserByEmail(email);
-
-    if (!user) {
+    if (rows.length === 0) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const user = rows[0];
 
-    if (!isMatch) {
+   
+    if (password !== user.password) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
     const token = jwt.sign(
-  { 
-    id: user.id, 
-    email: user.email,
-    role: user.role   // 👈 agregamos el rol
-  },
-  SECRET_KEY,
-  { expiresIn: "2h" }
-);
+      { id: user.id, role: user.role },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
 
-
-    res.json({
-      message: "Login exitoso",
-      token
-    });
-
+    res.json({ token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = {
-  register,
-  login
-};
+module.exports = { login };
