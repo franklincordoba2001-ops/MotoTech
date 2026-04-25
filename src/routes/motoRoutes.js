@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const motoController = require('../controllers/motoController');
+
+
+import * as motoController from '../controllers/motoController.js';
 
 router.get('/', motoController.getMotos);
 router.get('/:id', motoController.getMoto);
@@ -8,4 +10,5 @@ router.post('/', motoController.createMoto);
 router.put('/:id', motoController.updateMoto);
 router.delete('/:id', motoController.deleteMoto);
 
-module.exports = router;
+
+export default router;

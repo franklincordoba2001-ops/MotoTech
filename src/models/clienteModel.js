@@ -1,7 +1,7 @@
-const db = require('../config/db');
+// CAMBIO: Importación moderna con extensión .js
+import db from '../config/db.js';
 
-// Obtener todos los clientes
-const getAllClientes = async () => {
+export const getAllClientes = async () => {
     try {
         const [rows] = await db.query('SELECT * FROM clientes');
         return rows;
@@ -10,21 +10,18 @@ const getAllClientes = async () => {
     }
 };
 
-// Obtener cliente por ID
-const getClienteById = async (id) => {
+export const getClienteById = async (id) => {
     try {
         const [rows] = await db.query('SELECT * FROM clientes WHERE id = ?', [id]);
-        return rows[0]; // Retornamos solo el primer resultado
+        return rows[0]; 
     } catch (error) {
         throw new Error('Error al buscar el cliente: ' + error.message);
     }
 };
 
-// Crear cliente con validaciones
-const createCliente = async (cliente) => {
+export const createCliente = async (cliente) => {
     const { nombre, telefono, direccion, email } = cliente;
 
-    // Validación básica: que no falten campos obligatorios
     if (!nombre || !telefono) {
         throw new Error('El nombre y el teléfono son obligatorios');
     }
@@ -42,8 +39,7 @@ const createCliente = async (cliente) => {
     }
 };
 
-// Actualizar cliente
-const updateCliente = async (id, cliente) => {
+export const updateCliente = async (id, cliente) => {
     const { nombre, telefono, direccion, email } = cliente;
 
     try {
@@ -64,8 +60,7 @@ const updateCliente = async (id, cliente) => {
     }
 };
 
-// Eliminar cliente
-const deleteCliente = async (id) => {
+export const deleteCliente = async (id) => {
     try {
         const [result] = await db.query('DELETE FROM clientes WHERE id = ?', [id]);
         
@@ -78,10 +73,4 @@ const deleteCliente = async (id) => {
     }
 };
 
-module.exports = {
-    getAllClientes,
-    getClienteById,
-    createCliente,
-    updateCliente,
-    deleteCliente
-};
+// YA NO se usa module.exports

@@ -1,20 +1,25 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const clienteController = require('../controllers/clienteController');
 
-// GET - Obtener todos los clientes
-router.get('/', clienteController.getClientes);
+import * as clienteController from '../controllers/clienteController.js';
 
-// GET - Obtener cliente por ID
-router.get('/:id', clienteController.getCliente);
 
-// POST - Crear cliente
-router.post('/', clienteController.createCliente);
+import verifyToken, { isSuperAdmin, isAdmin } from '../Middleware/authMiddleware.js';
 
-// PUT - Actualizar cliente
-router.put('/:id', clienteController.updateCliente);
 
-// DELETE - Eliminar cliente
-router.delete('/:id', clienteController.deleteCliente);
+router.get('/', verifyToken, clienteController.getClientes);
 
-module.exports = router;
+
+router.get('/:id', verifyToken, clienteController.getCliente);
+
+
+router.post('/', verifyToken, isAdmin, clienteController.createCliente);
+
+
+router.put('/:id', verifyToken, isAdmin, clienteController.updateCliente);
+
+
+
+router.delete('/:id', verifyToken, isAdmin, clienteController.deleteCliente);
+
+export default router;

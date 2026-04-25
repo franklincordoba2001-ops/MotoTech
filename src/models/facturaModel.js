@@ -1,7 +1,7 @@
-const db = require('../config/db');
+// CAMBIO: Importación moderna con extensión .js
+import db from '../config/db.js';
 
-// --- ESTA ES LA FUNCIÓN QUE FALTABA ---
-const getAllFacturas = async () => {
+export const getAllFacturas = async () => {
   const [rows] = await db.query(`
     SELECT 
       f.id AS factura_id,
@@ -14,12 +14,12 @@ const getAllFacturas = async () => {
     JOIN ordenes_servicio o ON f.orden_id = o.id
     JOIN motos m ON o.moto_id = m.id
     JOIN clientes c ON m.cliente_id = c.id
+    ORDER BY f.id DESC
   `);
   return rows;
 };
 
-// Obtener factura completa con joins
-const getFacturaCompletaById = async (id) => {
+export const getFacturaCompletaById = async (id) => {
   const [rows] = await db.query(`
     SELECT 
       f.id AS factura_id,
@@ -41,8 +41,7 @@ const getFacturaCompletaById = async (id) => {
   return rows[0];
 };
 
-// Obtener factura por ID
-const getFacturaById = async (id) => {
+export const getFacturaById = async (id) => {
   const [rows] = await db.query(
     'SELECT * FROM facturas WHERE id = ?',
     [id]
@@ -50,18 +49,21 @@ const getFacturaById = async (id) => {
   return rows[0];
 };
 
-// Crear factura
-const createFactura = async (orden_id, fecha, total, metodo_pago) => {
+export const createFactura = async (orden_id, fecha, total, metodo_pago) => {
   const connection = await db.getConnection();
   try {
     await connection.beginTransaction();
 
+    // Aseguramos que el total sea un número entero
+    const totalLimpio = Math.floor(Number(total));
+
     const [result] = await connection.query(
       `INSERT INTO facturas (orden_id, fecha, total, metodo_pago)
        VALUES (?, ?, ?, ?)`,
-      [orden_id, fecha, total, metodo_pago]
+      [orden_id, fecha, totalLimpio, metodo_pago]
     );
 
+    // Actualizamos el estado de la orden
     await connection.query(
       `UPDATE ordenes_servicio 
        SET estado = 'entregado'
@@ -73,14 +75,14 @@ const createFactura = async (orden_id, fecha, total, metodo_pago) => {
     return result;
   } catch (error) {
     await connection.rollback();
+    console.error("Error en la transacción de factura:", error);
     throw error;
   } finally {
     connection.release();
   }
 };
 
-// Eliminar factura
-const deleteFactura = async (id) => {
+export const deleteFactura = async (id) => {
   const [result] = await db.query(
     'DELETE FROM facturas WHERE id = ?',
     [id]
@@ -88,10 +90,4 @@ const deleteFactura = async (id) => {
   return result;
 };
 
-module.exports = {
-  getAllFacturas, // Ahora sí existe arriba
-  getFacturaById,
-  createFactura,
-  deleteFactura,
-  getFacturaCompletaById
-};
+// YA NO se usa module.exports

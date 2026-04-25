@@ -1,7 +1,7 @@
-const db = require('../config/db');
+// CAMBIO: Importación moderna con extensión .js
+import db from '../config/db.js';
 
-// Total general facturado
-const getTotalGeneral = async () => {
+export const getTotalGeneral = async () => {
   const [rows] = await db.query(`
     SELECT 
       IFNULL(SUM(total), 0) AS total_general,
@@ -11,8 +11,7 @@ const getTotalGeneral = async () => {
   return rows[0];
 };
 
-// Total por método de pago
-const getTotalPorMetodoPago = async () => {
+export const getTotalPorMetodoPago = async () => {
   const [rows] = await db.query(`
     SELECT 
       metodo_pago,
@@ -23,8 +22,7 @@ const getTotalPorMetodoPago = async () => {
   return rows;
 };
 
-// Total por rango de fechas
-const getTotalPorFecha = async (inicio, fin) => {
+export const getTotalPorFecha = async (inicio, fin) => {
   const [rows] = await db.query(`
     SELECT 
       IFNULL(SUM(total), 0) AS total_rango
@@ -35,8 +33,4 @@ const getTotalPorFecha = async (inicio, fin) => {
   return rows[0];
 };
 
-module.exports = {
-  getTotalGeneral,
-  getTotalPorMetodoPago,
-  getTotalPorFecha
-};
+// YA NO se usa module.exports

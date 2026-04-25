@@ -1,7 +1,6 @@
-const clienteModel = require('../models/clienteModel');
+import * as clienteModel from '../models/clienteModel.js';
 
-// Obtener todos los clientes
-const getClientes = async (req, res) => {
+export const getClientes = async (req, res) => {
     try {
         const clientes = await clienteModel.getAllClientes();
         res.json(clientes);
@@ -11,8 +10,7 @@ const getClientes = async (req, res) => {
     }
 };
 
-// Obtener cliente por ID
-const getCliente = async (req, res) => {
+export const getCliente = async (req, res) => {
     try {
         const { id } = req.params;
         const cliente = await clienteModel.getClienteById(id);
@@ -26,8 +24,7 @@ const getCliente = async (req, res) => {
     }
 };
 
-// Crear cliente
-const createCliente = async (req, res) => {
+export const createCliente = async (req, res) => {
     try {
         const datosCliente = req.body;
         const result = await clienteModel.createCliente(datosCliente);
@@ -41,8 +38,7 @@ const createCliente = async (req, res) => {
     }
 };
 
-// Actualizar cliente
-const updateCliente = async (req, res) => {
+export const updateCliente = async (req, res) => {
     try {
         const { id } = req.params;
         const datosCliente = req.body;
@@ -51,13 +47,11 @@ const updateCliente = async (req, res) => {
         
         res.json({ message: 'Cliente actualizado correctamente' });
     } catch (error) {
-        // El error de "No se encontró el cliente" vendrá del modelo
         res.status(500).json({ error: error.message });
     }
 };
 
-// Eliminar cliente
-const deleteCliente = async (req, res) => {
+export const deleteCliente = async (req, res) => {
     try {
         const { id } = req.params;
         await clienteModel.deleteCliente(id);
@@ -68,10 +62,3 @@ const deleteCliente = async (req, res) => {
     }
 };
 
-module.exports = {
-    getClientes,
-    getCliente,
-    createCliente,
-    updateCliente,
-    deleteCliente
-};

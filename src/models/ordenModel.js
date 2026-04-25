@@ -1,7 +1,8 @@
-const db = require('../config/db');
+// CAMBIO: Importamos la base de datos con .js
+import db from '../config/db.js';
 
 // Obtener todas las órdenes con datos de moto y cliente
-const getAllOrdenes = async () => {
+export const getAllOrdenes = async () => {
   const [rows] = await db.query(`
     SELECT 
       o.id AS id, 
@@ -26,7 +27,7 @@ const getAllOrdenes = async () => {
 };
 
 // Obtener orden por ID
-const getOrdenById = async (id) => {
+export const getOrdenById = async (id) => {
   const [rows] = await db.query(
     'SELECT * FROM ordenes_servicio WHERE id = ?',
     [id]
@@ -34,8 +35,7 @@ const getOrdenById = async (id) => {
   return rows[0];
 };
 
-// Crear orden
-const createOrden = async (
+export const createOrden = async (
   moto_id,
   descripcion,
   fecha_ingreso,
@@ -53,8 +53,7 @@ const createOrden = async (
   return result;
 };
 
-// Actualizar orden
-const updateOrden = async (id, moto_id, descripcion, fecha_ingreso, fecha_entrega, estado, costo) => {
+export const updateOrden = async (id, moto_id, descripcion, fecha_ingreso, fecha_entrega, estado, costo) => {
   const costoLimpio = Math.round(costo || 0);
   
   const [result] = await db.query(
@@ -66,17 +65,9 @@ const updateOrden = async (id, moto_id, descripcion, fecha_ingreso, fecha_entreg
   return result;
 };
 
-const deleteOrden = async (id) => {
-  
+export const deleteOrden = async (id) => {
   const [result] = await db.query("DELETE FROM ordenes_servicio WHERE id = ?", [id]);
   return result;
 };
 
-
-module.exports = {
-  getAllOrdenes,
-  getOrdenById,
-  createOrden,
-  updateOrden,
-  deleteOrden
-};
+// YA NO se usa module.exports

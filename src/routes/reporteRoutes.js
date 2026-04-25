@@ -1,15 +1,18 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const reporteController = require('../controllers/reporteController');
-const verifyToken = require('../middleware/authMiddleware');
 
-//  Total general
+
+import * as reporteController from '../controllers/reporteController.js';
+
+
+import verifyToken from '../middleware/authMiddleware.js';
+
+
 router.get('/total', verifyToken, reporteController.totalGeneral);
 
-//  Total por método de pago
 router.get('/metodo-pago', verifyToken, reporteController.totalPorMetodoPago);
 
-//  Total por rango de fechas
 router.get('/por-fecha', verifyToken, reporteController.totalPorFecha);
 
-module.exports = router;
+
+export default router;

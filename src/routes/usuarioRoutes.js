@@ -1,20 +1,22 @@
-const express = require("express");
+import express from 'express';
 const router = express.Router();
 
-const {
-  createUsuario,
+
+import {
+  crearUsuario,     
   getUsuarios,
-  deleteUsuario,
-} = require("../controllers/usuarioController");
+  eliminarUsuario,    
+  actualizarUsuario   
+} from "../controllers/usuarioController.js";
 
-const verifyToken = require("../middleware/authMiddleware");
-const authorizeRole = require("../middleware/roleMiddleware");
 
-// SOLO ADMIN
-router.post("/", verifyToken, authorizeRole("admin"), createUsuario);
+import verifyToken from "../middleware/authMiddleware.js";
+import authorizeRole from "../middleware/roleMiddleware.js";
 
+
+router.post("/", verifyToken, authorizeRole("admin"), crearUsuario);
 router.get("/", verifyToken, authorizeRole("admin"), getUsuarios);
+router.delete("/:id", verifyToken, authorizeRole("admin"), eliminarUsuario);
+router.put("/:id", verifyToken, authorizeRole("admin"), actualizarUsuario);
 
-router.delete("/:id", verifyToken, authorizeRole("admin"), deleteUsuario);
-
-module.exports = router;
+export default router;

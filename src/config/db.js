@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+import mysql from 'mysql2/promise';
 
 const connection = mysql.createPool({
     host: 'localhost',
@@ -6,16 +6,17 @@ const connection = mysql.createPool({
     password: '',
     database: 'mototech'
 });
-// Bloque de prueba de conexión
+
+
 (async () => {
     try {
         const conn = await connection.getConnection();
-        console.log(' Conectado  base de datos "mototech" exitosamente.');
-        conn.release(); // Importante: libera la conexión de vuelta al pool
+        console.log('✅ Conectado a la base de datos "mototech" exitosamente.');
+        conn.release();
     } catch (error) {
-        console.error(' Error al conectar a la base de datos:', error.message);
+        console.error('❌ Error al conectar a la base de datos:', error.message);
     }
 })();
 
 
-module.exports = connection;
+export default connection;

@@ -1,7 +1,6 @@
-const reporteModel = require('../models/reporteModel');
+import * as reporteModel from '../models/reporteModel.js';
 
-//  Total general
-const totalGeneral = async (req, res) => {
+export const totalGeneral = async (req, res) => {
   try {
     const data = await reporteModel.getTotalGeneral();
     res.json(data);
@@ -10,8 +9,7 @@ const totalGeneral = async (req, res) => {
   }
 };
 
-//  Total por método de pago
-const totalPorMetodoPago = async (req, res) => {
+export const totalPorMetodoPago = async (req, res) => {
   try {
     const data = await reporteModel.getTotalPorMetodoPago();
     res.json(data);
@@ -20,8 +18,7 @@ const totalPorMetodoPago = async (req, res) => {
   }
 };
 
-//  Total por rango de fechas
-const totalPorFecha = async (req, res) => {
+export const totalPorFecha = async (req, res) => {
   try {
     const { inicio, fin } = req.query;
 
@@ -39,8 +36,3 @@ const totalPorFecha = async (req, res) => {
   }
 };
 
-module.exports = {
-  totalGeneral,
-  totalPorMetodoPago,
-  totalPorFecha
-};

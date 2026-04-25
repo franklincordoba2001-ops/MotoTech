@@ -1,7 +1,7 @@
-const motoModel = require('../models/motoModel');
+import * as motoModel from '../models/motoModel.js';
 
-// GET todas
-const getMotos = async (req, res) => {
+
+export const getMotos = async (req, res) => {
   try {
     const motos = await motoModel.getAllMotos();
     res.json(motos);
@@ -10,8 +10,8 @@ const getMotos = async (req, res) => {
   }
 };
 
-// GET por ID
-const getMoto = async (req, res) => {
+
+export const getMoto = async (req, res) => {
   try {
     const { id } = req.params;
     const moto = await motoModel.getMotoById(id);
@@ -26,8 +26,8 @@ const getMoto = async (req, res) => {
   }
 };
 
-// POST crear
-const createMoto = async (req, res) => {
+
+export const createMoto = async (req, res) => {
   try {
     const { placa, marca, modelo, cilindraje, cliente_id } = req.body;
 
@@ -49,8 +49,8 @@ const createMoto = async (req, res) => {
   }
 };
 
-// PUT actualizar
-const updateMoto = async (req, res) => {
+
+export const updateMoto = async (req, res) => {
   try {
     const { id } = req.params;
     const { placa, marca, modelo, cilindraje, cliente_id } = req.body;
@@ -71,8 +71,8 @@ const updateMoto = async (req, res) => {
   }
 };
 
-// DELETE eliminar
-const deleteMoto = async (req, res) => {
+
+export const deleteMoto = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -85,10 +85,3 @@ const deleteMoto = async (req, res) => {
   }
 };
 
-module.exports = {
-  getMotos,
-  getMoto,
-  createMoto,
-  updateMoto,
-  deleteMoto
-};

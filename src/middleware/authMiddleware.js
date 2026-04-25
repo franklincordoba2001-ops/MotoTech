@@ -1,6 +1,7 @@
-const jwt = require("jsonwebtoken");
+import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = "secreto_super_seguro";
+
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -13,11 +14,36 @@ const verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded;
+    req.user = decoded; 
     next();
   } catch (error) {
     return res.status(401).json({ message: "Token inválido" });
   }
 };
 
-module.exports = verifyToken;
+
+
+
+export const isSuperAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'superadmin') {
+    next();
+  } else {
+    return res.status(403).json({ 
+      message: "Acceso denegado: Se requieren permisos de Dueño del Software (SuperAdmin)." 
+    });
+  }
+};
+
+
+export const isAdmin = (req, res, next) => {
+  if (req.user && (req.user.role === 'admin' || req.user.role === 'superadmin')) {
+    next();
+  } else {
+    return res.status(403).json({ 
+      message: "Acceso denegado: Solo para administradores autorizados." 
+    });
+  }
+};
+
+
+export default verifyToken;
