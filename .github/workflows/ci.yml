@@ -1,4 +1,4 @@
-name: Monorepo CI (Frontend & Backend)
+name: MotoTech CI (Frontend & Backend)
 
 on:
   push:
